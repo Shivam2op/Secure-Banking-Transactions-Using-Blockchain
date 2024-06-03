@@ -1,0 +1,15 @@
+{% extends 'form_template.html' %}
+
+{% block after_form %}
+
+	<div class="mt-5">
+		{% for transaction in filter.qs %}
+			<div class="h5">
+				<a href="{% url 'app:TransactionView' transaction.id %}">
+					{{ transaction }}
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}

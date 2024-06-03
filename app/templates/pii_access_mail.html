@@ -1,0 +1,13 @@
+<p>
+	You have received a request from {{ from_user }} to view PII details of {{ target_user }}.
+</p>
+
+{% if DEBUG %}
+	<a href="http://127.0.0.1:8000{% url 'app:GovtPIIAccess' uidb1 uidb2 token %}">
+		http://127.0.0.1:8000{% url 'app:GovtPIIAccess' uidb1 uidb2 token %}
+	</a>
+{% else %}
+	<a href="https://192.168.2.235:443{% url 'app:GovtPIIAccess' uidb1 uidb2 token %}">
+		https://192.168.2.235:443{% url 'app:GovtPIIAccess' uidb1 uidb2 token %}
+	</a>
+{% endif %}

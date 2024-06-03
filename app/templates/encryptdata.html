@@ -1,0 +1,59 @@
+
+<script>
+
+	function getEncryptedData(data) {
+		toEncrypt('{{ publickey }}', data)
+			.catch(function () {
+				console.log('Could not encrypt message');
+			});
+	}
+
+	function convertStringToArrayBufferView(str){
+	    var bytes = new Uint8Array(str.length);
+	    for (var iii = 0; iii < str.length; iii++){
+	        bytes[iii] = str.charCodeAt(iii);
+	    }
+	    return bytes;
+	}
+
+
+    async function toEncrypt(pubkey, data) {
+
+		pubkey = window.atob(pubkey);
+
+		let publickey = convertStringToArrayBufferView(pubkey);
+        publickey = await MakePublicKey(publickey);
+        let convert_data = convertStringToArrayBufferView(data);
+        let encrypteddata = await encrypt(convert_data, publickey);
+        let edata = btoa(String.fromCharCode.apply(null, new Uint8Array(encrypteddata)));
+
+        addTokenToForm(edata);
+    }
+
+    function MakePublicKey(pubkey) {
+
+        return window.crypto.subtle.importKey(
+            "spki",
+            pubkey,
+            {
+                name: "RSA-OAEP",
+                hash: {name: "SHA-256"},
+            },
+            false,
+            ["encrypt"]
+        )
+    }
+
+
+    function encrypt(data, keys) {
+
+        return window.crypto.subtle.encrypt(
+            {
+                name: "RSA-OAEP",
+            },
+            keys,
+            data
+        )
+    }
+
+</script>

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+	{% include 'navbar.html' %}
+
+	<div class="d-flex flex-column align-items-center mt-4">
+		<h1>Sign Up</h1>
+
+		<form method="post" class="mt-5 d-flex flex-column w-100 align-items-center">
+			{% csrf_token %}
+
+			<p class="font-weight-bold">Personal Details</p>
+			{% include 'form.html' with form=form %}
+
+			<hr class="w-50">
+
+			<div class="d-flex w-100 justify-content-center py-1">
+				<input type="submit" title="Submit" class="btn btn-dark">
+			</div>
+
+		</form>
+	</div>
+{% endblock %}
+
+{% block body_scripts %}
+	<script>
+		$(document).ready(function () {
+			$('.help-text-on-hover').popover({
+				'trigger': 'hover',
+				'container': 'body',
+				'placement': 'right',
+				'html': true,
+			});
+		})
+	</script>
+{% endblock %}

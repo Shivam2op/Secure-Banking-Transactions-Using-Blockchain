@@ -1,0 +1,28 @@
+{% extends 'list_template.html' %}
+
+{% block information %}
+	<div class="d-flex w-75">
+
+		<div class="flex-grow-1">
+			<p class="d-none">Spacer</p>
+		</div>
+
+		<div class="d-flex flex-column">
+			{% if user.assigned_to %}
+				<p class="mb-0">
+					<strong>Assigned To:</strong> {{ user.assigned_to }}
+				</p>
+				{% if not user.is_internal_user %}
+					<p class="mb-0">
+						<strong>Assigned Manager:</strong> {{ user.get_assigned_manager }}
+					</p>
+				{% endif %}
+			{% endif %}
+			{% if balance %}
+				<p class="mb-0">
+					<strong>Total Balance:</strong> {{ balance }}
+				</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

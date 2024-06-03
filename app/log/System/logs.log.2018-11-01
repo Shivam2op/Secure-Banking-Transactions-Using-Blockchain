@@ -1,0 +1,29 @@
+[01/Nov/2018 01:32:48] INFO User Delete Request sent by new_user for new_user to new_employee
+[01/Nov/2018 01:52:30] INFO User request From new_user to Delete User Profile approved by new_employee 
+[01/Nov/2018 01:53:32] INFO User request From new_user to Complete Delete User Profile approved by new_admin 
+[01/Nov/2018 02:04:20] INFO Password Reset Initiated for new_user by admin meet
+[01/Nov/2018 02:05:12] INFO Password Reset Done for new_user
+[01/Nov/2018 02:07:39] INFO PKI reset : new_user
+[01/Nov/2018 02:09:14] INFO User Delete Request sent by new_user for new_user to new_employee
+[01/Nov/2018 02:10:18] INFO User request From new_user to Delete User Profile approved by new_employee 
+[01/Nov/2018 02:11:07] INFO User request From new_user to Complete Delete User Profile approved by new_admin 
+[01/Nov/2018 03:05:44] INFO Request for transaction created by new_employee
+[01/Nov/2018 03:06:51] INFO PKI reset : new_admin
+[01/Nov/2018 03:07:48] INFO Transaction 39 approved by : new_admin
+[01/Nov/2018 03:08:49] INFO Request for transaction created by new_employee
+[01/Nov/2018 03:09:27] INFO Transaction 40 approved by : new_admin
+[01/Nov/2018 03:11:18] INFO Request for transaction created by new_employee
+[01/Nov/2018 03:11:44] INFO Transaction 41 approved by : new_admin
+[01/Nov/2018 03:14:21] INFO Request for transaction created by new_employee
+[01/Nov/2018 03:14:53] INFO Transaction 42 approved by : new_admin
+[01/Nov/2018 03:17:25] INFO Request for new account sent by user3
+[01/Nov/2018 03:26:41] INFO User Profile View Request sent by new_employee for new_merchant
+[01/Nov/2018 04:32:15] INFO Request for transaction created by new_employee
+[01/Nov/2018 04:34:15] INFO Transaction 43 declined by : new_admin
+[01/Nov/2018 04:39:52] INFO Request for transaction created by new_employee
+[01/Nov/2018 04:53:09] INFO Transaction 44 declined by : new_admin
+[01/Nov/2018 04:55:34] INFO Transaction 20 declined by : new_admin
+[01/Nov/2018 04:56:10] INFO Transaction 21 declined by : new_admin
+[01/Nov/2018 21:23:27] INFO Transaction 22 approved by : meet
+[01/Nov/2018 23:22:33] INFO Request for new account sent by new_merchant
+[01/Nov/2018 23:34:04] INFO User request From new_merchant to Create Account approved by new_employee 

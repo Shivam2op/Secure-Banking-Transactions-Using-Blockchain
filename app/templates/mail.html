@@ -1,0 +1,16 @@
+<p>Welcome To SBS</p>
+<p>
+	Below is a one-time activation link.
+	After your email is confirmed, you will be shown a highly sensitive QR Code that will help you set up Google Authenticator for you. Be sure not to share it with anyone.
+	This is a required set up. Without this, you will not be able to sign in to your account.
+</p>
+
+{% if DEBUG %}
+	<a href="http://127.0.0.1:8000{% url 'app:UserConfirmation' uidb token %}">
+		http://127.0.0.1:8000{% url 'app:UserConfirmation' uidb token %}
+	</a>
+{% else %}
+	<a href="https://192.168.2.235:443{% url 'app:UserConfirmation' uidb token %}">
+		https://192.168.2.235:443{% url 'app:UserConfirmation' uidb token %}
+	</a>
+{% endif %}

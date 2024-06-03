@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	{% include 'navbar.html' %}
+
+	{% include 'pki.html' with hideDiv=True %}
+
+	<div class="d-flex flex-column align-items-center mt-4">
+		<h1>QR Code</h1>
+
+		<img width="200" height="200"
+		     src="{% url "app:OTPImage" %}"
+		     onload="generateKeys()"
+		>
+
+		<p>or use the URL below:</p>
+		<p>{{ device.config_url }}</p>
+	</div>
+{% endblock %}

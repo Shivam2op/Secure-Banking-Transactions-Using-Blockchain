@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% load static %}
+
+		{% include 'common_head.html' %}
+
+
+		{% block head %}{% endblock %}
+	</head>
+	<body>
+		{% if messages %}
+			{% for message in messages %}
+				<div{% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissable fade show mb-0"{% endif %}>
+					{{ message }}
+
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		{% block body %}{% endblock %}
+
+		{% include 'common_scripts.html' %}
+
+		{% block body_scripts %}{% endblock %}
+
+		{% include 'su/is_su.html' %}
+		{% include 'session_security/all.html' %}
+
+		<div style="height: 10vh;"></div>
+	</body>
+</html>

@@ -1,0 +1,25 @@
+
+<script>
+
+$($('#btn-'+'{{ arg }}')).click(function () {
+    var keyboard = $($('#'+'{{ arg }}')).getkeyboard();
+    keyboard
+    .reveal()
+    .$el.trigger('change');
+});
+
+
+$($('#'+'{{ arg }}')).keyboard({
+    display: {'bksp': 'Delete:Backspace',},
+    lockInput: false,
+    restrictInput: false,
+    restrictInclude: '',
+    preventPaste: false,
+    autoAccept: true,
+    tabNavigation: true,
+    enterNavigation: true,
+    openOn: '',
+});
+</script>
+
+

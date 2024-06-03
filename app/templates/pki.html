@@ -1,0 +1,118 @@
+{% csrf_token %}
+
+{% if not hideDiv %}
+	<div class="d-flex flex-column align-items-center mt-5">
+		<p id="div"></p>
+	</div>
+{% endif %}
+
+<script>
+
+	function generateKeys() {
+		encryptDataSaveKey().catch(function () {
+			console.log('Could not create RSA key pair');
+		});
+	}
+
+    async function encryptDataSaveKey() {
+
+	    let keys = await makeKeys();
+
+	    let public_keys = keys.publicKey;
+	    let pub_key_object = await crypto.subtle.exportKey("spki", public_keys);
+	    let pk = btoa(String.fromCharCode.apply(null, new Uint8Array(pub_key_object)));
+
+	    let private_keys = keys.privateKey;
+
+	    let priv_key_object = await crypto.subtle.exportKey("jwk", private_keys);
+
+	    let final_priv_key =await window.crypto.subtle.importKey(
+	        "jwk",
+	        {
+	            kty: "RSA",
+	            e: "AQAB",
+	            dp: priv_key_object.dp,
+	            dq: priv_key_object.dq,
+	            d: priv_key_object.d,
+	            n: priv_key_object.n,
+	            p: priv_key_object.p,
+	            q: priv_key_object.q,
+	            qi: priv_key_object.qi,
+	            alg: "RSA-OAEP-256",
+	            ext: true,
+	        },
+	        {
+	            name: "RSA-OAEP",
+	            hash: {name: "SHA-256"},
+	        },
+	        false,
+	        ["decrypt"]
+	    );
+
+
+
+	    callOnStore(function (store) {
+	        store.put({user:'{{ user }}', keys: final_priv_key});
+	    });
+
+	    let post= await $.ajax({
+			type:"POST",
+			url:"{% url 'app:UserPublicKeyAPI' %}",
+			data: {
+			    'publickey': pk,
+			     csrfmiddlewaretoken: '{{ csrf_token }}'
+			},
+		    success: function () {
+			    {% if redirect %}
+				    document.getElementById('div').innerText = 'Keys Generated';
+
+				    setTimeout(function () {
+					    window.location = '/';
+				    }, 1000);
+			    {% endif %}
+		    }
+	    });
+
+    }
+
+    function callOnStore(fn_) {
+
+        var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+        var open = indexedDB.open("SBS", 1);
+
+        open.onupgradeneeded = function() {
+            var db = open.result;
+            var store = db.createObjectStore("Key", {keyPath: "user"});
+            store.createIndex("key_sbs","keys", {unique: true});
+        };
+
+        open.onsuccess = function() {
+            // Start a new transaction
+            var db = open.result;
+            var tx = db.transaction("Key", "readwrite");
+            var store = tx.objectStore("Key");
+
+            fn_(store);
+
+            tx.oncomplete = function() {
+                db.close();
+            };
+        }
+    }
+
+    function makeKeys() {
+        return window.crypto.subtle.generateKey(
+        {
+            name: "RSA-OAEP",
+            modulusLength: 1024,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: {name: "SHA-256"},
+        },
+
+        true,
+        ["encrypt", "decrypt"]
+       )
+    }
+
+</script>

@@ -1,0 +1,111 @@
+{% extends 'dashboard.html' %}
+
+{% block head %}
+	{% if extra_form_virtual_keyboard or form_virtual_keyboard %}
+		{% include 'virtualkeyboardscripts.html' %}
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+
+	<h2>{{ title }}</h2>
+
+	<form {% if get %} method="{{ get }}" {% else %} method="post" {% endif %} id="form_id" class="mt-5 d-flex flex-column w-100 align-items-center">
+
+		{% if not get %}
+			{% csrf_token %}
+		{% endif %}
+
+		{% include 'form.html' with form=form showVirtualKeyboard=form_virtual_keyboard %}
+
+		{% if extra_form %}
+			<hr class="w-50">
+
+			{% if not extra_form_readonly %}
+
+				{% include 'form.html' with form=extra_form showVirtualKeyboard=extra_form_virtual_keyboard readonly=False %}
+
+			{% else %}
+
+				{% include 'form.html' with form=extra_form showVirtualKeyboard=extra_form_virtual_keyboard %}
+
+			{% endif %}
+		{% endif %}
+
+		<hr class="w-50">
+
+		{% if hide_btn and link %}
+			<div class="d-flex w-100 justify-content-center py-1">
+				<a class="btn btn-dark mx-2" href="{{ link.1 }}">
+					{{ link.0 }}
+				</a>
+			</div>
+		{% endif %}
+
+		{% if not hide_btn %}
+			<div class="d-flex w-100 justify-content-center py-1">
+
+				{% if link %}
+					<a class="btn btn-dark mx-2" href="{{ link.1 }}">
+						{{ link.0 }}
+					</a>
+				{% endif %}
+
+				{% if extra_btn2_title %}
+					<input type="submit" class="btn btn-dark mx-2"
+					       value="{{ extra_btn2_title }}" name="{{ extra_btn2_title }}"
+					>
+				{% endif %}
+
+				<input type="submit" class="btn btn-dark mx-2"
+				{% if btn_title %}
+					value="{{ btn_title }}"
+					name="{{ btn_title }}"
+				{% endif %}
+				>
+
+				{% if extra_btn_title %}
+					<input type="submit" class="btn btn-dark mx-2"
+					       value="{{ extra_btn_title }}" name="{{ extra_btn_title }}"
+					>
+				{% endif %}
+
+				<input id="submit-id" type="hidden" />
+			</div>
+		{% endif %}
+
+	</form>
+
+	{% block after_form %}{% endblock %}
+
+{% endblock %}
+
+{% block body_scripts %}
+
+	{% if use_pki %}
+		<script>
+			function addTokenToForm(token) {
+				$('#id_pki_token').val(token);
+			}
+		</script>
+
+		{% include 'encryptdata.html' with publickey=use_pki.public_key %}
+		{% include 'getprivatekeyanddecrpt.html' with edata=use_pki.edata %}
+
+		<script>
+			getDecryptedData();
+		</script>
+	{% endif %}
+
+	<script>
+		$(':submit').click(function (event) {
+			$(':submit').attr('disabled', true);
+
+			let button = event.target;
+			$('#submit-id').attr('name', button.value).val(button.value);
+
+			$('#form_id').submit();
+		});
+	</script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load static %}
+{% load Filters %}
+
+{% if form.non_field_errors %}
+	<div class="d-flex flex-column align-items-center text-center py-1 mb-3">
+		{% for error in form.non_field_errors %}
+			<small class="text-danger font-weight-bold">{{ error|safe }}</small>
+		{% endfor %}
+	</div>
+{% endif %}
+
+{% for field in form.hidden_fields %}
+	{{ field }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+	<div class="d-flex w-100 justify-content-center py-1">
+		<div class="col-4">
+			<span class="d-none">Spacer</span>
+		</div>
+
+		<div class="col-2">
+			{{ field.label_tag }}
+		</div>
+
+		<div class="col-2">
+			{% if readonly %}
+				{{ field|verbose_value:field.value|default_if_none:"-" }}
+			{% else %}
+				{{ field }}
+			{% endif %}
+		</div>
+
+		{% if field.help_text %}
+			<small class="d-none">{{ field.help_text }}</small>
+		{% endif %}
+
+		<div class="d-flex flex-column col-4 py-1">
+			{% if showVirtualKeyboard  %}
+
+				<div id="btn-{{ field.auto_id }}" style="font-size:20px ; cursor:pointer " class="col-1"> &#x2328;</div>
+				{% include 'virtualkeyboardhelper.html' with arg=field.auto_id %}
+
+			{% endif %}
+
+			{% for error in field.errors %}
+				<small class="text-danger">{{ error }}</small>
+			{% endfor %}
+		</div>
+	</div>
+{% endfor %}

@@ -1,0 +1,85 @@
+<script>
+
+	function getDecryptedData() {
+		loadKeyDecryptData('{{ user }}', '{{ edata }}')
+			.catch(function () {
+				console.log('Could not decrypt message');
+			});
+	}
+
+	function convertArrayBufferViewtoString(buffer) {
+		var str = "";
+		for (var iii = 0; iii < buffer.byteLength; iii++) {
+			str += String.fromCharCode(buffer[iii]);
+		}
+
+		return str;
+	}
+
+	function str2ab(str) {
+		var buf = new ArrayBuffer(str.length);
+		var bufView = new Uint8Array(buf);
+		for (var i = 0, strLen = str.length; i < strLen; i++) {
+			bufView[i] = str.charCodeAt(i);
+		}
+		return bufView;
+	}
+
+	async function loadKeyDecryptData(user, edata) {
+
+		edata = window.atob(edata);
+
+		callOnStore(function (store) {
+			let getData = store.get(user);
+
+			getData.onsuccess = async function () {
+	            let privatekey = getData.result.keys;
+
+	            let tempdata = str2ab(edata);
+	            let ddata = await decrypt(tempdata, privatekey);
+	            let convert_data = convertArrayBufferViewtoString(ddata);
+
+	            getEncryptedData(convert_data);
+			};
+		})
+
+	}
+
+	function callOnStore(fn_) {
+
+		var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+		var open = indexedDB.open("SBS", 1);
+
+		open.onupgradeneeded = function() {
+			var db = open.result;
+			var store = db.createObjectStore("Key", {keyPath: "user"});
+			store.createIndex("key_sbs", "keys", {unique: true});
+		};
+
+		open.onsuccess = function () {
+			var db = open.result;
+			var tx = db.transaction("Key", "readonly");
+			var store = tx.objectStore("Key");
+
+			fn_(store);
+
+			tx.oncomplete = function () {
+				db.close();
+			};
+		}
+	}
+
+
+	async function decrypt(data, keys) {
+		return new Uint8Array(await window.crypto.subtle.decrypt(
+			{
+				name: "RSA-OAEP",
+			},
+			keys,
+			data
+		));
+	}
+
+
+</script>

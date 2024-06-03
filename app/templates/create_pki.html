@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+	<h1>{{ title }}</h1>
+
+{% endblock %}
+
+{% block body_scripts %}
+	{% include 'pki.html' with redirect=True %}
+	<script>
+		generateKeys();
+	</script>
+{% endblock %}
